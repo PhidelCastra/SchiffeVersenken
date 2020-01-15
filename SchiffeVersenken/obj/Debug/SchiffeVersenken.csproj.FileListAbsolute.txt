@@ -1,0 +1,13 @@
+C:\Users\Phidel\Documents\Visual Studio 2017\Projects\SchiffeVersenken\SchiffeVersenken\bin\Debug\SchiffeVersenken.exe.config
+C:\Users\Phidel\Documents\Visual Studio 2017\Projects\SchiffeVersenken\SchiffeVersenken\bin\Debug\SchiffeVersenken.exe
+C:\Users\Phidel\Documents\Visual Studio 2017\Projects\SchiffeVersenken\SchiffeVersenken\bin\Debug\SchiffeVersenken.pdb
+C:\Users\Phidel\Documents\Visual Studio 2017\Projects\SchiffeVersenken\SchiffeVersenken\obj\Debug\SchiffeVersenken.csprojAssemblyReference.cache
+C:\Users\Phidel\Documents\Visual Studio 2017\Projects\SchiffeVersenken\SchiffeVersenken\obj\Debug\SchiffeVersenken.csproj.CoreCompileInputs.cache
+C:\Users\Phidel\Documents\Visual Studio 2017\Projects\SchiffeVersenken\SchiffeVersenken\obj\Debug\SchiffeVersenken.exe
+C:\Users\Phidel\Documents\Visual Studio 2017\Projects\SchiffeVersenken\SchiffeVersenken\obj\Debug\SchiffeVersenken.pdb
+C:\Users\klauschke\source\repos\SchiffeVersenken\SchiffeVersenken\bin\Debug\SchiffeVersenken.exe.config
+C:\Users\klauschke\source\repos\SchiffeVersenken\SchiffeVersenken\bin\Debug\SchiffeVersenken.exe
+C:\Users\klauschke\source\repos\SchiffeVersenken\SchiffeVersenken\bin\Debug\SchiffeVersenken.pdb
+C:\Users\klauschke\source\repos\SchiffeVersenken\SchiffeVersenken\obj\Debug\SchiffeVersenken.csprojAssemblyReference.cache
+C:\Users\klauschke\source\repos\SchiffeVersenken\SchiffeVersenken\obj\Debug\SchiffeVersenken.exe
+C:\Users\klauschke\source\repos\SchiffeVersenken\SchiffeVersenken\obj\Debug\SchiffeVersenken.pdb
