@@ -77,6 +77,7 @@ namespace SchiffeVersenken.Classes
 
             while (!roundEnds)
             {
+                // Own move.
                 Console.WriteLine();
                 Console.WriteLine("Drücke Taste ESC um Programm zu beenden...");
                 Console.Write("Eingabe Zeile: ");
@@ -91,14 +92,19 @@ namespace SchiffeVersenken.Classes
                 Console.Write($", Row:'{rowInput}' , Cell:");
                 var cellInput = ConvertStringToNumber(Console.ReadLine());
 
+                // Computer moves.
                 var currentGameState = enemyField.UpdateField(rowInput, cellInput);
                 IsGameFin(currentGameState, rowInput, cellInput);
 
+                // DELETE IT LATER.....
+                enemy.field.ShowField(true);
+
                 var move = enemy.MakeMove();
+                var moveInfor = ownField.LastMoveInfo;
                 
                 var defaultColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine($"Enemy has set to {move.Item1}{move.Item2} to yout field.");
+                Console.WriteLine($"Enemy has set to {move.Item1}{move.Item2} to your field.");
                 Console.ForegroundColor = defaultColor;
 
                 Console.WriteLine("Press any key to continue...");

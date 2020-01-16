@@ -419,5 +419,14 @@ namespace SchiffeVersenken.Classes
             Console.WriteLine(msg);
             Console.ForegroundColor = colorMemory;
         }
+
+        public int ConvertRowToNumber(char rowName)
+        {
+            return Array.IndexOf(Constants.Alphabet, rowName);
+        }
+        public char ConvertRowToChar(int rowNumber)
+        {
+            return Constants.Alphabet[rowNumber];
+        }
     }
 }
