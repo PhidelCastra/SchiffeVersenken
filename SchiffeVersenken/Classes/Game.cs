@@ -81,23 +81,23 @@ namespace SchiffeVersenken.Classes
                 Console.WriteLine();
                 Console.WriteLine("Drücke Taste ESC um Programm zu beenden...");
                 Console.Write("Eingabe Zeile: ");
-                var input = Console.ReadKey(true);
-                if (input.Key == ConsoleKey.Escape)
-                {
-                    roundEnds = true;
-                    continue;
-                }
-                var rowInput = char.ToUpper(input.KeyChar);
+                //var input = Console.ReadKey(true);
+                //if (input.Key == ConsoleKey.Escape)
+                //{
+                //    roundEnds = true;
+                //    continue;
+                //}
+                //var rowInput = char.ToUpper(input.KeyChar);
 
-                Console.Write($", Row:'{rowInput}' , Cell:");
-                var cellInput = ConvertStringToNumber(Console.ReadLine());
+                //Console.Write($", Row:'{rowInput}' , Cell:");
+                //var cellInput = ConvertStringToNumber(Console.ReadLine());
 
-                // Computer moves.
-                var currentGameState = enemyField.UpdateField(rowInput, cellInput);
-                IsGameFin(currentGameState, rowInput, cellInput);
+                //// Computer moves.
+                //var currentGameState = enemyField.UpdateField(rowInput, cellInput);
+                //IsGameFin(currentGameState, rowInput, cellInput);
 
-                // DELETE IT LATER.....
-                enemy.field.ShowField(true);
+                //// DELETE IT LATER.....
+                //enemy.field.ShowField(true);
 
                 var move = enemy.MakeMove();
                 var moveInfor = ownField.LastMoveInfo;
@@ -111,7 +111,7 @@ namespace SchiffeVersenken.Classes
                 Console.ReadKey(true);
                 IsGameFin(enemy.GameState, move.Item1, move.Item2);
 
-                enemyField.ShowField(true);
+                //enemyField.ShowField(true);
 
             }
         }

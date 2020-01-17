@@ -105,42 +105,35 @@ namespace SchiffeVersenken.Classes.Enemies
             {
                 searchForNextHit = true;
                 originShipHit = originShipHit == null ? currentHitField : originShipHit;
+
                 if(neighborField != null)
                 {
-                    //TEST STREAK
-                    if(neighborField.Item1 < currentHitField.Item1)
+                    // Check if a direction is determined
+                    if(originShipHit.Item1 > neighborField.Item1)
                     {
                         direction = 2;
                         isMoveUp = true;
-                        // SENK
-                        // GO UP
                     }
-                    else if(neighborField.Item1 > currentHitField.Item1) 
+                    else if(originShipHit.Item1 < neighborField.Item1) 
                     {
                         direction = 2;
                         isMoveUp = false;
-                        // SENK
-                        // GO DOWN
                     }
-                    else if(neighborField.Item2 < currentHitField.Item2)
+                    else if(originShipHit.Item2 > neighborField.Item2)
                     {
                         direction = 1;
                         isMoveRight = false;
-                        // WAG
-                        // GO LEFT
                     }
-                    else if(neighborField.Item2 > currentHitField.Item2)
+                    else if(originShipHit.Item2 < neighborField.Item2)
                     {
                         direction = 1;
                         isMoveRight = true;
-                        // WAG
-                        // GO RIGHT
                     }
-                    // - - - - - - 
 
                     currentHitField = neighborField;
                     neighborPointer = 0;
                 }
+                
 
                 neighborField = GetNextMoveAfterHit(currentHitField);
                 var indexToDelete = Array.IndexOf(possibleMoves, neighborField);
@@ -186,46 +179,23 @@ namespace SchiffeVersenken.Classes.Enemies
             }
             else if (searchForNextHit) 
             {
-                // - - -  -
+                // Get neighbor.
                 neighborField = GetNextMoveAfterHit(currentHitField);
                 var indexToDelete = Array.IndexOf(possibleMoves, neighborField);
                 possibleMoves[indexToDelete] = null;
                 UpdateMoveArray();
-                lastMoveInfo = field.LastMoveInfo;
+                
+                // Update field.
                 var r = field.ConvertRowToChar(neighborField.Item1);
                 var c = neighborField.Item2;
                 GameState = field.UpdateField(r, c);
-                
+                lastMoveInfo = field.LastMoveInfo;
+
                 finRow = field.ConvertRowToChar(neighborField.Item1);
                 finCell = neighborField.Item2;
             }
             
             return Tuple.Create(finRow, finCell);
-        }
-
-        // TEST:
-        private void ManagedHit(Tuple<int, int> lastHitField)
-        {
-            // Next Hit
-            currentHitField = lastHitField;
-            nextRoundMove = GetNextMoveAfterHit(currentHitField);
-        }
-
-        private void ManageFirstHit(Tuple<int, int> hitField)
-        {
-            // Managed first hit on a ship.
-            var lastMoveInfo = field.LastMoveInfo;
-
-            if (lastMoveInfo == Rules.QuadrantIncludesSunkShip) { searchForNextHit = false; }
-            if (searchForNextHit || lastMoveInfo == Rules.QuadrantIncludesHitAndShip)
-            {
-                if (currentHitField == null)
-                {
-                    currentHitField = hitField;
-                }
-                searchForNextHit = true;
-                nextRoundMove = GetNextMoveAfterHit(currentHitField);
-            }
         }
 
         /// <summary>
@@ -234,36 +204,8 @@ namespace SchiffeVersenken.Classes.Enemies
         /// Result is an array with reduced length and without null -indicies.
         /// </summary>
         private void UpdateMoveArray() {
-
-            for(var i = 0; i < possibleMoves.Length - 1; i++)
-            {
-                if(possibleMoves[i] == null)
-                {
-                    possibleMoves[i] = possibleMoves[i + 1];
-                    possibleMoves[i + 1] = null;
-                }
-            }
-
-            var nullCounter = 0;
-            for(var i = possibleMoves.Length - 1; i >= 0; i--)
-            {
-                if(possibleMoves[i] != null)
-                {
-                    break;
-                }
-                nullCounter++;
-            }
-
-            var newPossibleMoves = new Tuple<int, int>[possibleMoves.Length - nullCounter];
-            for(var i = 0; i < newPossibleMoves.Length; i++)
-            {
-                newPossibleMoves[i] = possibleMoves[i];
-            }
-
-            possibleMoves = newPossibleMoves;
+            possibleMoves = possibleMoves.AsEnumerable().Where(m => m != null).ToArray();
         }
-
-        int maxNeighborCount = 0;
 
         /// <summary>
         /// Should be called if a hit was happens.
@@ -274,28 +216,26 @@ namespace SchiffeVersenken.Classes.Enemies
         /// <returns>Tupel with next neighbor or, if pointer is heigher then neighbor count, null.</returns>
         private Tuple<int, int> GetNextMoveAfterHit(Tuple<int, int> lastMove)
         {
-            var tryCounter = 0;
-            Tuple<int, int> nextMove;
-            do
+            var nextMove = GetNeihghbor(lastMove);
+
+            // If neighbor is null - returns to origin hit coordinates with one field more.
+            if(nextMove == null)
             {
-                nextMove = GetNeihghbor(lastMove);
-                if(nextMove == null)
+                if(direction == 1)
                 {
-                    if(direction == 1)
-                    {
-                        var oneBehindOrigin = isMoveRight == true ? Tuple.Create(originShipHit.Item1, originShipHit.Item2 - 1) : Tuple.Create(originShipHit.Item1, originShipHit.Item2 + 1);
-                        currentHitField = originShipHit;
-                        isMoveRight = isMoveRight == false ? true : isMoveRight == true ? false : isMoveRight;
-                    }
-                    if(direction == 2)
-                    {
-                        var oneBehindHit = isMoveUp == true ? Tuple.Create(originShipHit.Item1 + 1, originShipHit.Item2) : Tuple.Create(originShipHit.Item1 - 1, originShipHit.Item2);
-                        currentHitField = originShipHit;
-                        isMoveUp = isMoveUp == false ? true : isMoveUp == true ? false : isMoveUp;
-                    }
-                    tryCounter++;
+                    var oneBehindOrigin = isMoveRight == true ? Tuple.Create(originShipHit.Item1, originShipHit.Item2 - 1) : Tuple.Create(originShipHit.Item1, originShipHit.Item2 + 1);
+                    currentHitField = originShipHit;
+                    isMoveRight = isMoveRight == false ? true : isMoveRight == true ? false : isMoveRight;
+                    nextMove = oneBehindOrigin;
                 }
-            } while ((nextMove == null && tryCounter < 4) || nextMove.Item1 < 0 || nextMove.Item1 >= size || nextMove.Item2 < 0 || nextMove.Item2 >= size);
+                if(direction == 2)
+                {
+                    var oneBehindOrigin = isMoveUp == true ? Tuple.Create(originShipHit.Item1 + 1, originShipHit.Item2) : Tuple.Create(originShipHit.Item1 - 1, originShipHit.Item2);
+                    currentHitField = originShipHit;
+                    isMoveUp = isMoveUp == false ? true : isMoveUp == true ? false : isMoveUp;
+                    nextMove = oneBehindOrigin;
+                }
+            }
 
             return nextMove;
         }
@@ -339,7 +279,6 @@ namespace SchiffeVersenken.Classes.Enemies
             }
 
             neighbors = RemoveNullIndicies(neighbors);
-            maxNeighborCount = neighbors.Length;
 
             return neighbors.Length < 1 ? null : neighbors[0];
         }

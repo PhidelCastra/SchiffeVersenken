@@ -186,7 +186,7 @@ namespace SchiffeVersenken.Classes
             }
 
             // Clear console.
-            Console.Clear();
+             Console.Clear();
 
             // Draw matrix
             DrawMatrix();
