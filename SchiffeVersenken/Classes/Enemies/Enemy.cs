@@ -38,14 +38,8 @@ namespace SchiffeVersenken.Classes.Enemies
         public Rules.GameStates GameState { get; private set; }
 
         /// <summary>
-        /// If a ship was hit, set move for next round - Nearly at the hit.
+        /// True if a ship is hit, otherwise false also if a ship is sunken.
         /// </summary>
-        private Tuple<int, int> nextRoundMove;
-
-        /// <summary>
-        /// Should be add one if start to try to find the next ship part.
-        /// </summary>
-        private int neighborPointer = 0;
         private bool searchForNextHit;
 
         /// <summary>
@@ -55,12 +49,15 @@ namespace SchiffeVersenken.Classes.Enemies
         private Tuple<int, int> currentHitField;
         private Tuple<int, int> neighborField;
 
+        bool originNeighborsDeleted;
+
         /// <summary>
         /// 0.Default
         /// 1.Horizontal
         /// 2.Vertical
         /// </summary>
         private int direction;
+
         private bool? isMoveRight;
         private bool? isMoveUp;
 
@@ -91,6 +88,8 @@ namespace SchiffeVersenken.Classes.Enemies
             }
         }
 
+        List<Tuple<int, int>> parts = new List<Tuple<int, int>>();
+        int lastLastMoveInfo;
         /// <summary>
         /// Set a move dependent from the random result and remaining moves.
         /// Updates also the field.
@@ -106,10 +105,9 @@ namespace SchiffeVersenken.Classes.Enemies
                 searchForNextHit = true;
                 originShipHit = originShipHit == null ? currentHitField : originShipHit;
 
-                if(neighborField != null)
+                if (neighborField != null)
                 {
-                    // Check if a direction is determined
-                    if(originShipHit.Item1 > neighborField.Item1)
+                    if (originShipHit.Item1 > neighborField.Item1)
                     {
                         direction = 2;
                         isMoveUp = true;
@@ -131,9 +129,13 @@ namespace SchiffeVersenken.Classes.Enemies
                     }
 
                     currentHitField = neighborField;
-                    neighborPointer = 0;
                 }
-                
+
+                // Collect fields to remove neighbors from moves.
+                if (!parts.Contains(currentHitField))
+                {
+                    parts.Add(currentHitField);
+                }
 
                 neighborField = GetNextMoveAfterHit(currentHitField);
                 var indexToDelete = Array.IndexOf(possibleMoves, neighborField);
@@ -142,8 +144,9 @@ namespace SchiffeVersenken.Classes.Enemies
 
                 var rowChar = field.ConvertRowToChar(neighborField.Item1);
                 var cell = neighborField.Item2;
-                field.UpdateField(rowChar, cell);
+                GameState = field.UpdateField(rowChar, cell);
 
+                lastLastMoveInfo = lastMoveInfo;
                 lastMoveInfo = field.LastMoveInfo;
 
                 finRow = field.ConvertRowToChar(currentHitField.Item1);
@@ -153,11 +156,21 @@ namespace SchiffeVersenken.Classes.Enemies
             // If the last shot wasn´t a hit.
             else if (!searchForNextHit || lastMoveInfo == Rules.QuadrantIncludesSunkShip)
             {
+                if(parts != null && parts.Count > 0)
+                {
+                    parts.Add(neighborField);       // Add also the last hit field.
+                    parts.ForEach(n => RemoveNeighbors(n)); 
+                }
+
+                // Reset all hit properties.
+                parts = new List<Tuple<int, int>>();
                 searchForNextHit = false;
                 neighborField = null;
                 originShipHit = null;
                 direction = 0;
+                originNeighborsDeleted = false;
 
+                // Choose new random index.
                 var index = moveCreator.Next(0, possibleMoves.Length);
                 
                 // Find tupel and set index null.
@@ -248,16 +261,8 @@ namespace SchiffeVersenken.Classes.Enemies
         /// <returns></returns>
         private Tuple<int, int> GetNeihghbor(Tuple<int, int> lastMove)
         {
-            var lastRow = lastMove.Item1;
-            var lastColumn = lastMove.Item2;
-            
-            // All possible neighbors.
-            Tuple<int, int>[] neighbors = { 
-                Tuple.Create(lastRow - 1, lastColumn), 
-                Tuple.Create(lastRow, lastColumn + 1), 
-                Tuple.Create(lastRow + 1, lastColumn),
-                Tuple.Create(lastRow, lastColumn - 1)
-            };
+            // Get all possible neighbors.
+            var neighbors = GetNeighbors(lastMove);
 
             if(direction == 1)
             {
@@ -266,7 +271,6 @@ namespace SchiffeVersenken.Classes.Enemies
 
                 neighbors[1] = isMoveRight == false ? null : neighbors[1];
                 neighbors[3] = isMoveRight == true ? null : neighbors[3];
-                neighborPointer = 0;
             }
             else if(direction == 2)
             {
@@ -275,7 +279,6 @@ namespace SchiffeVersenken.Classes.Enemies
 
                 neighbors[0] = isMoveUp == false ? null : neighbors[0];
                 neighbors[2] = isMoveUp == true ? null : neighbors[2];
-                neighborPointer = 0;
             }
 
             neighbors = RemoveNullIndicies(neighbors);
@@ -302,6 +305,52 @@ namespace SchiffeVersenken.Classes.Enemies
 
             // Delete all places with null -value from array.
             return neighbors.AsQueryable().Where(n => n != null).ToArray();
+        }
+
+        /// <summary>
+        /// Search and remove neighbor tuples of passed tuple from Possible moves.
+        /// </summary>
+        /// <param name="hitField">Tuple from which should be removed neighbor fields.</param>
+        private void RemoveNeighbors(Tuple<int, int> hitField)
+        {
+            var neighborFields = GetNeighbors(hitField);
+            for(var i = 0; i < neighborFields.Length; i++)
+            {
+                var currentNeughbor = neighborFields[i];
+                for(var j = 0; j < possibleMoves.Length; j++)
+                {
+                    var currentMove = possibleMoves[j];
+                    if(currentMove == null || currentMove.Item1 != currentNeughbor.Item1 || currentMove.Item2 != currentNeughbor.Item2)
+                    {
+                        continue;
+                    }
+
+                    possibleMoves[j] = null;
+                }
+            }
+            // Remove all null indicies.
+            UpdateMoveArray();
+        }
+
+        /// <summary>
+        /// Get array with neighbor tuples of a tuple.
+        /// </summary>
+        /// <param name="hit">Tuple from which will get the neighbor tuples.</param>
+        /// <returns>Array with neighbors from the passed tuple.</returns>
+        private Tuple<int, int>[] GetNeighbors(Tuple<int, int> hit)
+        {
+            var hitRow = hit.Item1;
+            var hitColumn = hit.Item2;
+
+            // All possible neighbors.
+            Tuple<int, int>[] neighbors = {
+                Tuple.Create(hitRow - 1, hitColumn),
+                Tuple.Create(hitRow, hitColumn + 1),
+                Tuple.Create(hitRow + 1, hitColumn),
+                Tuple.Create(hitRow, hitColumn - 1)
+            };
+
+            return neighbors;
         }
     }
 }

@@ -17,9 +17,6 @@ namespace SchiffeVersenken.Classes
 
         public ShipPart[] Parts;
 
-        private char FrontRightPart = '/';
-        private char borderPart = '¯';
-
         public Dictionary<ShipPart, Quadrant> partDict = new Dictionary<ShipPart, Quadrant>();
 
         /* Constructor */

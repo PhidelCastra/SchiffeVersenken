@@ -59,7 +59,7 @@ namespace SchiffeVersenken.Classes
                 var currentGameState = field.UpdateField(rowInput, cellInput);
                 
                 // Check game state and set roundends true if state says game is fin.
-                IsGameFin(currentGameState, rowInput, cellInput);
+                IsGameFin(currentGameState, field, rowInput, cellInput);
             }
         }
 
@@ -100,7 +100,7 @@ namespace SchiffeVersenken.Classes
                 //enemy.field.ShowField(true);
 
                 var move = enemy.MakeMove();
-                var moveInfor = ownField.LastMoveInfo;
+                IsGameFin(enemy.GameState, ownField, move.Item1, move.Item2);
                 
                 var defaultColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -108,10 +108,6 @@ namespace SchiffeVersenken.Classes
                 Console.ForegroundColor = defaultColor;
 
                 Console.WriteLine("Press any key to continue...");
-                Console.ReadKey(true);
-                IsGameFin(enemy.GameState, move.Item1, move.Item2);
-
-                //enemyField.ShowField(true);
 
             }
         }
@@ -138,11 +134,13 @@ namespace SchiffeVersenken.Classes
         /// <param name="row">Last choosen row char.</param>
         /// <param name="cell">Last choosen cell number.</param>
         /// <returns>True if the game state has corresponding value for game fin, otherwise null.</returns>
-        private bool IsGameFin(Rules.GameStates state, char row, int cell)
+        private bool IsGameFin(Rules.GameStates state, Field field, char row, int cell)
         {
             if (state == Rules.GameStates.GameIsFinished)
             {
                 roundEnds = true;
+
+                field.ShowField(true);
 
                 Console.Write("Press key to return to menu... ");
                 Console.ReadKey();
