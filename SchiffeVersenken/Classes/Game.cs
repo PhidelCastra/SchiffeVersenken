@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SchiffeVersenken.Data;
 
 namespace SchiffeVersenken.Classes
 {
@@ -75,45 +76,79 @@ namespace SchiffeVersenken.Classes
 
             var enemy = new Enemy(ownField);
 
+            var playerIs = true;
+
             while (!roundEnds)
             {
-                // Own move.
-                Console.WriteLine();
-                Console.WriteLine("Drücke Taste ESC um Programm zu beenden...");
-                Console.Write("Eingabe Zeile: ");
-                //var input = Console.ReadKey(true);
-                //if (input.Key == ConsoleKey.Escape)
-                //{
-                //    roundEnds = true;
-                //    continue;
-                //}
-                //var rowInput = char.ToUpper(input.KeyChar);
+                if (playerIs)
+                {
+                    // Own move.
+                    Console.WriteLine();
+                    Console.WriteLine("Drücke Taste ESC um Programm zu beenden...");
+                    Console.WriteLine("Your move!");
+                    Console.WriteLine("Input row: ");
+                    var input = Console.ReadKey(true);
+                    if (input.Key == ConsoleKey.Escape)
+                    {
+                        roundEnds = true;
+                        continue;
+                    }
+                    var rowInput = char.ToUpper(input.KeyChar);
 
-                //Console.Write($", Row:'{rowInput}' , Cell:");
-                //var cellInput = ConvertStringToNumber(Console.ReadLine());
+                    Console.WriteLine($"Row: '{rowInput}'");
+                    Console.Write($"Cell: ");
+                    var cellInput = ConvertStringToNumber(Console.ReadLine());
 
-                //// Computer moves.
-                //var currentGameState = enemyField.UpdateField(rowInput, cellInput);
-                //IsGameFin(currentGameState, rowInput, cellInput);
+                    // Computer moves.
+                    var currentGameState = enemyField.UpdateField(rowInput, cellInput);
+                    var playerWins = IsGameFin(currentGameState, enemyField, rowInput, cellInput);
+                    if (playerWins)
+                    {
+                        var lostMsg = new Message(string.Format(Messages.PlayerHasWonMsg, enemy.PlayerName), true);
+                        Messages.ShowMessage(lostMsg);
+                        roundEnds = true;
+                        continue;
+                    }
 
+                    playerIs = false;
+                    Console.WriteLine("Press any key for computer move...");
+                    Console.ReadKey();
+                    continue;
+                }
                 //// DELETE IT LATER.....
                 //enemy.field.ShowField(true);
 
                 var move = enemy.MakeMove();
-                IsGameFin(enemy.GameState, ownField, move.Item1, move.Item2);
-                
+                var enemyHasWon = IsGameFin(enemy.GameState, ownField, move.Item1, move.Item2);
+                if (enemyHasWon)
+                {
+                    roundEnds = true;
+                    var lostMsg = new Message(string.Format(Messages.PlayerHasLost, enemy.PlayerName), false);
+                    Messages.ShowMessage(lostMsg);
+                }
                 var defaultColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine($"Enemy has set to {move.Item1}{move.Item2} to your field.");
                 Console.ForegroundColor = defaultColor;
 
                 Console.WriteLine("Press any key to continue...");
+                Console.ReadKey(true);
+                Console.Clear();
 
+                playerIs = true;
+                enemyField.ShowField(true);
             }
+
+            // End informations.
+            var playerInfo = string.Format(Messages.PlayerEndInformations, enemyField.InputCount, enemyField.FalseInputCount);
+            Console.WriteLine(playerInfo);
+            Console.WriteLine();
+            Console.WriteLine("Press any key to get back to menu...");
+            Console.ReadKey();
         }
         private void InitializeMultiplayer()
         {
-
+            // Comming soon...
         }
 
         private Field InitializeField(int size, Ship[] ships)
@@ -138,8 +173,6 @@ namespace SchiffeVersenken.Classes
         {
             if (state == Rules.GameStates.GameIsFinished)
             {
-                roundEnds = true;
-
                 field.ShowField(true);
 
                 Console.Write("Press key to return to menu... ");

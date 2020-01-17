@@ -20,6 +20,8 @@ namespace SchiffeVersenken.Classes.Enemies
         /// </summary>
         private int size;
 
+        public string PlayerName = "Max Positiv";
+
         /// <summary>
         /// Should be includes all possible Tuples, with row and cell -numbers, which can set.
         /// </summary>
@@ -48,8 +50,6 @@ namespace SchiffeVersenken.Classes.Enemies
         private Tuple<int, int> originShipHit;
         private Tuple<int, int> currentHitField;
         private Tuple<int, int> neighborField;
-
-        bool originNeighborsDeleted;
 
         /// <summary>
         /// 0.Default

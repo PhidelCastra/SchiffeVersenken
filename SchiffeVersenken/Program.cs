@@ -17,7 +17,6 @@ namespace SchiffeVersenken
             var roundEnds = true;
 
             Field field1 = null;
-            Field field2 = null;
 
             Console.WindowHeight = 50;
             var menu = new Menu();
@@ -47,7 +46,7 @@ namespace SchiffeVersenken
                 else if (menu.CurrentState == Menu.States.VS && menu.GetPressEnter())
                 {
                     var game = new Game(1);
-                    
+                    menuShouldInitialize = true;
                 }
 
                 // Play loop.

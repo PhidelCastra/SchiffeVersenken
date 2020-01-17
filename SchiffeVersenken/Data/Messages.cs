@@ -22,6 +22,12 @@ namespace SchiffeVersenken.Data
 
         public static readonly string ShipWasHitMsg = "Ship part hit on quadrant {0}{1}!";
 
+        public static readonly string PlayerHasWonMsg = "You have won against '{0}'!";
+
+        public static readonly string PlayerHasLost = "You have lost against '{0}'!";
+
+        public static readonly string PlayerEndInformations = "You has needed {0} moves, {1} of this was fail moves.";
+
         /// <summary>
         /// Print message on console independent of "GoodNews" boolean.
         /// </summary>
