@@ -24,9 +24,9 @@ namespace SchiffeVersenken.Classes.Menu
         private readonly string MiddleStartBtnPart = "|   ¯¯| ¯|  |¯ |  |¯|  ||  || | ¯|  |¯ ";
         private readonly string BottomStartBtnPart = "|¯¯  /   |__|  |__|¯|__||__|\\_\\  |__|  ";
 
-        private readonly string UpperVSComputerPart = "|¯¯¯¯";
-        private readonly string MiddleVSComputerPart = "|";
-        private readonly string BottomVSComputerPart = "|";
+        private readonly string UpperVSComputerPart = "\\¯\\  /¯/ /¯¯¯¯|  ____    |¯¯\\   /¯¯||¯¯¯¯¯¯||¯¯¯¯¯\\|¯¯¯¯¯|";
+        private readonly string MiddleVSComputerPart = " \\ \\/ / |   ¯¯| |____|   |   \\_/   || |¯¯| || |¯¯\\||  ¯¯¯|";
+        private readonly string BottomVSComputerPart = "  \\__/  |¯¯  /           |__|___|__||______||  ¯¯¯/|  ¯¯¯|";
 
         /// <summary>
         /// Module parts to draw info option in console.
@@ -38,9 +38,9 @@ namespace SchiffeVersenken.Classes.Menu
         /// <summary>
         /// Module parts to draw quit option in console.
         /// </summary>
-        private readonly string UpperEndBtnPart =  "|¯¯¯¯¯||¯¯¯¯|¯¯||¯¯¯¯\\";
-        private readonly string MiddleEndBtnPart = "|  ¯¯¯||  | |  || |¯\\|";
-        private readonly string BottomEndBtnPart = "|  ¯¯¯||__|____||  ¯¯/";
+        private readonly string UpperEndBtnPart = "|¯¯¯¯¯||¯¯¯¯|¯¯||¯¯¯¯¯\\";
+        private readonly string MiddleEndBtnPart = "|  ¯¯¯||  | |  || |¯¯\\|";
+        private readonly string BottomEndBtnPart = "|  ¯¯¯||__|____||  ¯¯¯/";
 
         private readonly ConsoleColor arrowColor = ConsoleColor.DarkRed;
         private readonly ConsoleColor moduleColor = ConsoleColor.DarkGreen;

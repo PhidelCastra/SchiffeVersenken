@@ -168,7 +168,7 @@ namespace SchiffeVersenken.Classes.Enemies
                 neighborField = null;
                 originShipHit = null;
                 direction = 0;
-                originNeighborsDeleted = false;
+                // originNeighborsDeleted = false;
 
                 // Choose new random index.
                 var index = moveCreator.Next(0, possibleMoves.Length);

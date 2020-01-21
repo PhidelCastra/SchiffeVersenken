@@ -59,6 +59,7 @@ namespace SchiffeVersenken.Classes
         }
     }
 
+
     class ShipPart
     {
         public bool IsHit { get; set; }

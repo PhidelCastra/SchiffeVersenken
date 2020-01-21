@@ -30,8 +30,8 @@ namespace SchiffeVersenken
                     menuShouldInitialize = false;
                 }
 
-                var i = Console.ReadKey();
-                menu.ProcessInput(i.Key);
+                var k = Console.ReadKey();
+                menu.ProcessInput(k.Key);
                 
                 if(menu.CurrentState == Menu.States.Start && menu.GetPressEnter())
                 {
@@ -80,7 +80,7 @@ namespace SchiffeVersenken
                         Console.Write("Press key to return : ");
                         Console.WriteLine();
                     }
-                    else if(currentGameState != Rules.GameStates.MoveNoAllowed)
+                    else if (currentGameState != Rules.GameStates.MoveNoAllowed)
                     {
                         var bgMemory = Console.BackgroundColor;
                         var letterMemory = Console.ForegroundColor;

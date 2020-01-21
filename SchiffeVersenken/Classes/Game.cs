@@ -75,6 +75,7 @@ namespace SchiffeVersenken.Classes
             var enemyField = InitializeField(10, cShips);
 
             var enemy = new Enemy(ownField);
+            enemy.PlayerName = "Shrimply Pibbels";
 
             var playerIs = true;
 
@@ -84,7 +85,7 @@ namespace SchiffeVersenken.Classes
                 {
                     // Own move.
                     Console.WriteLine();
-                    Console.WriteLine("Drücke Taste ESC um Programm zu beenden...");
+                    Console.WriteLine("Press ESC to quit game...");
                     Console.WriteLine("Your move!");
                     Console.WriteLine("Input row: ");
                     var input = Console.ReadKey(true);
@@ -128,10 +129,10 @@ namespace SchiffeVersenken.Classes
                 }
                 var defaultColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine($"Enemy has set to {move.Item1}{move.Item2} to your field.");
+                Console.WriteLine($"'{enemy.PlayerName}' has set to '{move.Item1}{move.Item2}' to your field.");
                 Console.ForegroundColor = defaultColor;
 
-                Console.WriteLine("Press any key to continue...");
+                Console.WriteLine("Press any key for your move...");
                 Console.ReadKey(true);
                 Console.Clear();
 
